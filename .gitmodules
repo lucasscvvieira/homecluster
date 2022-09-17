@@ -1,0 +1,3 @@
+[submodule "terraform/tfstate"]
+	path = terraform/tfstate
+	url = git@github.com:lucasscvvieira/homecluster-tfstate.git
