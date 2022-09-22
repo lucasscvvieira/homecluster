@@ -33,10 +33,7 @@ resource "ssh_resource" "server_create" {
   ]
 
   triggers = {
-    for k, v in compact(flatten([
-      each.value.user, each.value.labels, each.value.taints,
-      local.disabled_services, var.network.flannel_backend,
-    ])) : k => v
+    for k, v in [each.value.user, each.value.bastion] : k => v
   }
 
   depends_on = [
@@ -45,7 +42,7 @@ resource "ssh_resource" "server_create" {
 
   lifecycle {
     replace_triggered_by = [
-      ssh_resource.root_server_create,
+      ssh_resource.root_server_create.id,
     ]
   }
 }
@@ -66,7 +63,7 @@ resource "ssh_resource" "server_destroy" {
 
   lifecycle {
     replace_triggered_by = [
-      ssh_resource.server_create[each.key],
+      ssh_resource.server_create[each.key].id,
     ]
   }
 }

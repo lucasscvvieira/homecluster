@@ -30,11 +30,10 @@ resource "ssh_resource" "root_server_create" {
   ]
 
   triggers = {
-    for k, v in compact(flatten([
-      local.root_server_node.user, local.root_server_node.labels,
-      local.root_server_node.taints, local.disabled_services,
-      var.network.flannel_backend,
-    ])) : k => v
+    for k, v in [
+      local.root_server_node.user,
+      local.root_server_node.bastion,
+    ] : k => v
   }
 }
 
@@ -52,7 +51,7 @@ resource "ssh_resource" "root_server_destroy" {
 
   lifecycle {
     replace_triggered_by = [
-      ssh_resource.root_server_create,
+      ssh_resource.root_server_create.id,
     ]
   }
 }

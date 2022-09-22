@@ -15,7 +15,7 @@ resource "ssh_sensitive_resource" "kubeconf" {
 
   lifecycle {
     replace_triggered_by = [
-      ssh_resource.root_server_create,
+      ssh_resource.root_server_create.id,
     ]
   }
 }

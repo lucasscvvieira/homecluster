@@ -25,13 +25,17 @@ resource "ssh_resource" "agent_create" {
     ]))
   ]
 
+  triggers = {
+    for k, v in [each.value.user, each.value.bastion] : k => v
+  }
+
   depends_on = [
     ssh_resource.root_server_create,
   ]
 
   lifecycle {
     replace_triggered_by = [
-      ssh_resource.root_server_create,
+      ssh_resource.root_server_create.id,
     ]
   }
 }
@@ -52,7 +56,7 @@ resource "ssh_resource" "agent_destroy" {
 
   lifecycle {
     replace_triggered_by = [
-      ssh_resource.agent_create[each.key],
+      ssh_resource.agent_create[each.key].id,
     ]
   }
 }
