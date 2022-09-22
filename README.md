@@ -14,6 +14,17 @@ hostnamectl set-hostname k3s-01
 systemctl enable --now ssh
 ```
 
+```shell
+apt install locales
+
+# editar e descomentar o en_US.UTF-8 e o pt_BR.UTF-8
+nano /et/locale.gen
+locale-gen
+localectl set-locale LANG=pt_BR.UTF-8
+
+timedatectl set-timezone America/Sao_Paulo
+```
+
 Agora vamos atualizar o nosso sistema operacional e instalar algumas dependências:
 ```shell
 apt update && apt upgrade -y
