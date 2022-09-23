@@ -1,3 +1,14 @@
+variable "k3s_version" {
+  type = string
+  default = null
+  nullable = true
+}
+
+variable "k3s_channel" {
+  type = string
+  default = "stable"
+}
+
 variable "server_nodes" {
   type = list(object({
     name    = optional(string)

@@ -11,6 +11,7 @@ resource "ssh_resource" "server_create" {
   commands = [
     join(" ", compact([
       "curl -sfL https://get.k3s.io |",
+      "INSTALL_K3S_VERSION=${local.k3s_version}",
       "K3S_KUBECONFIG_MODE=664",
       "K3S_TOKEN=${random_password.server_token.result}",
       "K3S_AGENT_TOKEN=${random_password.agent_token.result}",

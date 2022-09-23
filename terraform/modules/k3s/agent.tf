@@ -15,6 +15,7 @@ resource "ssh_resource" "agent_create" {
   commands = [
     join(" ", compact([
       "curl -sfL https://get.k3s.io |",
+      "INSTALL_K3S_VERSION=${local.k3s_version}",
       "K3S_TOKEN=${random_password.agent_token.result}",
       "K3S_URL=https://${local.root_server_node.host}:6443",
       each.value.name != null ? "K3S_NODE_NAME=${each.value.name}" : "",

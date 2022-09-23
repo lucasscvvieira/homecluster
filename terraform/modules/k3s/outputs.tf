@@ -2,6 +2,10 @@ locals {
   kubeconf = yamldecode(ssh_sensitive_resource.kubeconf.result)
 }
 
+output "k3s_version" {
+  value = local.k3s_version
+}
+
 output "server_nodes" {
   value = var.server_nodes
 }
