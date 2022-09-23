@@ -13,14 +13,34 @@ terraform {
       version = ">= 2.2.1, < 3.0.0"
     }
     http = {
-      source = "hashicorp/http"
+      source  = "hashicorp/http"
       version = ">= 3.1.0, < 4.0.0"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.6.0, < 3.0.0"
     }
   }
 }
 
-provider "ssh" {}
+provider "ssh" {
+  # Configuration options
+}
 
-provider "random" {}
+provider "random" {
+  # Configuration options
+}
 
-provider "http" {}
+provider "http" {
+  # Configuration options
+}
+
+provider "helm" {
+  kubernetes {
+    host = module.k3s_cluster.kubeconf.cluster.host
+
+    cluster_ca_certificate = module.k3s_cluster.kubeconf.cluster.ca_certificate
+    client_certificate     = module.k3s_cluster.kubeconf.client.certificate
+    client_key             = module.k3s_cluster.kubeconf.client.key
+  }
+}
