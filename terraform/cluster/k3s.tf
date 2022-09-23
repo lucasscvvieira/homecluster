@@ -1,6 +1,8 @@
 module "k3s_cluster" {
   source = "../modules/k3s"
 
+  k3s_version = "v1.24.4+k3s1"
+
   disable = {
     coredns        = true
     traefik        = true
@@ -26,4 +28,8 @@ module "k3s_cluster" {
       user = "k3s"
     },
   ]
+}
+
+output "k3s_version" {
+  value = module.k3s_cluster.k3s_version
 }
