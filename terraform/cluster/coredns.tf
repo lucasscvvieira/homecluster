@@ -16,4 +16,9 @@ resource "helm_release" "coredns" {
     name  = "service.clusterIP"
     value = module.k3s_cluster.network.dns_ip
   }
+
+  set {
+    name  = "prometheus.service.enabled"
+    value = true
+  }
 }
