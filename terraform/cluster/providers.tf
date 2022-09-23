@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.6.0, < 3.0.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.13.1, < 3.0.0"
+    }
   }
 }
 
@@ -43,4 +47,12 @@ provider "helm" {
     client_certificate     = module.k3s_cluster.kubeconf.client.certificate
     client_key             = module.k3s_cluster.kubeconf.client.key
   }
+}
+
+provider "kubernetes" {
+  host = module.k3s_cluster.kubeconf.cluster.host
+
+  cluster_ca_certificate = module.k3s_cluster.kubeconf.cluster.ca_certificate
+  client_certificate     = module.k3s_cluster.kubeconf.client.certificate
+  client_key             = module.k3s_cluster.kubeconf.client.key
 }
