@@ -1,11 +1,11 @@
 variable "k3s_version" {
-  type = string
-  default = null
+  type     = string
+  default  = null
   nullable = true
 }
 
 variable "k3s_channel" {
-  type = string
+  type    = string
   default = "stable"
 }
 

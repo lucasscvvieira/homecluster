@@ -25,13 +25,12 @@ output "disabled" {
 output "kubeconf" {
   value = {
     cluster = {
-      host           = local.root_server_node.host
-      ca_certificate = local.kubeconf.clusters[0].cluster.certificate-authority-data
+      host           = "https://${local.root_server_node.host}:6443"
+      ca_certificate = base64decode(local.kubeconf.clusters[0].cluster.certificate-authority-data)
     }
-    user = {
-      name        = local.kubeconf.users[0].name
-      certificate = local.kubeconf.users[0].user.client-certificate-data
-      key         = local.kubeconf.users[0].user.client-key-data
+    client = {
+      certificate = base64decode(local.kubeconf.users[0].user.client-certificate-data)
+      key         = base64decode(local.kubeconf.users[0].user.client-key-data)
     }
   }
   sensitive = true
