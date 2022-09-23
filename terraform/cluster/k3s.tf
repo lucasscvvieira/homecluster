@@ -19,6 +19,13 @@ module "k3s_cluster" {
     {
       host = "192.168.0.101"
       user = "k3s"
+      taints = [
+        # Faz nó rodar apenas pods críticos
+        # "CriticalAddonsOnly=true:NoExecute",
+
+        # Desabilita carga de trabalho no nó master
+        "node-role.kubernetes.io/master=true:NoSchedule",
+      ]
     },
   ]
 
