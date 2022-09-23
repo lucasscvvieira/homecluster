@@ -64,3 +64,10 @@ Para instalar o *agent* é o comando:
 ```shell
 k3sup join --k3s-channel latest --server-ip 192.168.0.101 --ip 192.168.0.102 --user k3s --ssh-key ~/.ssh/id_ed25519
 ```
+
+---
+
+Grafana: (Dados padrões)
+    usuário: admin
+    senha: prom-operator
+

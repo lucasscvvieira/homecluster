@@ -20,16 +20,6 @@ resource "helm_release" "cilium" {
   }
 
   set {
-    name  = "hubble.relay.enabled"
-    value = true
-  }
-
-  set {
-    name  = "hubble.ui.enabled"
-    value = true
-  }
-
-  set {
     name  = "hubble.ui.replicas"
     value = 1
   }
@@ -51,4 +41,25 @@ resource "helm_release" "cilium" {
       value = set.value
     }
   }
+
+  # Habilita serviços
+  dynamic "set" {
+    for_each = [
+      "prometheus.enabled",
+      "prometheus.serviceMonitor.enabled",
+      "operator.prometheus.enabled",
+      "operator.prometheus.serviceMonitor.enabled",
+      "hubble.metrics.serviceMonitor.enabled",
+      "hubble.relay.enabled",
+      "hubble.relay.prometheus.enabled",
+      "hubble.relay.prometheus.serviceMonitor.enabled",
+      "hubble.ui.enabled",
+    ]
+    content {
+      name  = set.value
+      value = true
+    }
+  }
+
+  depends_on = [helm_release.kube_prometheus]
 }
