@@ -18,21 +18,5 @@ resource "helm_release" "metallb" {
   #   value = "monitoring"
   # }
 
-  depends_on = [module.k3s_cluster]
-}
-
-resource "kubernetes_manifest" "metallb_config" {
-  manifest = {
-    apiVersion = "metallb.io/v1beta1"
-    kind = "IPAddressPool"
-    metadata = {
-      name = "production"
-      namespace = "metallb-system"
-    }
-    spec = {
-      addresses = ["192.168.0.224/29"]
-    }
-  }
-
-  depends_on = [helm_release.metallb]
+  depends_on = [helm_release.cilium]
 }

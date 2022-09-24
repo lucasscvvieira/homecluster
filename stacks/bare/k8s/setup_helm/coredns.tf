@@ -14,11 +14,23 @@ resource "helm_release" "coredns" {
 
   set {
     name  = "service.clusterIP"
-    value = module.k3s_cluster.network.dns_ip
+    value = data.terraform_remote_state.k8s_init.outputs.network.dns_ip
   }
 
   set {
     name  = "prometheus.service.enabled"
     value = true
   }
+
+  set {
+    name  = "prometheus.monitor.enabled"
+    value = true
+  }
+
+  set {
+    name  = "prometheus.monitor.namespace"
+    value = "monitoring"
+  }
+
+  depends_on = [helm_release.kube_prometheus]
 }

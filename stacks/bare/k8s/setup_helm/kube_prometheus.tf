@@ -6,7 +6,8 @@ resource "helm_release" "kube_prometheus" {
 
   namespace        = "monitoring"
   create_namespace = true
+  wait             = true
   wait_for_jobs    = true
 
-  depends_on = [module.k3s_cluster]
+  depends_on = [helm_release.cilium]
 }

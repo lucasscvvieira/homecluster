@@ -1,5 +1,5 @@
-resource "ssh_resource" "server_create" {
-  for_each = local.server_nodes_map
+resource "ssh_resource" "servers_create" {
+  for_each = local.server_nodes
 
   when         = "create"
   host         = each.key
@@ -15,12 +15,9 @@ resource "ssh_resource" "server_create" {
       "K3S_KUBECONFIG_MODE=664",
       "K3S_TOKEN=${random_password.server_token.result}",
       "K3S_AGENT_TOKEN=${random_password.agent_token.result}",
-      "K3S_URL=https://${local.root_server_node.host}:6443",
-      each.value.name != null ? "K3S_NODE_NAME=${each.value.name}" : "",
+      "K3S_URL=https://${local.primary_server.host}:6443",
+      try("K3S_NODE_NAME=${each.value.name}", ""),
       "sh -s - server",
-      # "--write-kubeconfig-mode 664",
-      # "--token ${random_password.server_token.result}",
-      # "--agent-token ${random_password.agent_token.result}",
       "--flannel-backend ${var.network.flannel_backend}",
       "--cluster-cidr ${var.network.cidr.cluster}",
       "--service-cidr ${var.network.cidr.service}",
@@ -28,7 +25,6 @@ resource "ssh_resource" "server_create" {
       "--cluster-domain ${var.network.domain}",
       "%{for label in each.value.labels~} --node-label ${label} %{endfor~}",
       "%{for taint in each.value.taints~} --node-taint ${taint} %{endfor~}",
-      # each.key != local.root_server_node.host ? "--server https://${local.root_server_node.host}:6443" : "",
       length(local.disabled_services) > 0 ? "--disable ${local.disabled_services}" : "",
     ]))
   ]
@@ -38,18 +34,18 @@ resource "ssh_resource" "server_create" {
   }
 
   depends_on = [
-    ssh_resource.root_server_create,
+    ssh_resource.primary_server_create,
   ]
 
   lifecycle {
     replace_triggered_by = [
-      ssh_resource.root_server_create.id,
+      ssh_resource.primary_server_create.id,
     ]
   }
 }
 
-resource "ssh_resource" "server_destroy" {
-  for_each = local.server_nodes_map
+resource "ssh_resource" "servers_destroy" {
+  for_each = local.server_nodes
 
   when         = "destroy"
   host         = each.key
@@ -64,7 +60,7 @@ resource "ssh_resource" "server_destroy" {
 
   lifecycle {
     replace_triggered_by = [
-      ssh_resource.server_create[each.key].id,
+      ssh_resource.servers_create[each.key].id,
     ]
   }
 }

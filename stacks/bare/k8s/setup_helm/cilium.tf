@@ -26,7 +26,7 @@ resource "helm_release" "cilium" {
 
   set {
     name  = "ipam.operator.clusterPoolIPv4PodCIDRList[0]"
-    value = module.k3s_cluster.network.cidr.cluster
+    value = data.terraform_remote_state.k8s_init.outputs.network.cidr.cluster
   }
 
   set {
@@ -45,14 +45,14 @@ resource "helm_release" "cilium" {
   # Habilita serviços
   dynamic "set" {
     for_each = [
-      "prometheus.enabled",
-      "prometheus.serviceMonitor.enabled",
-      "operator.prometheus.enabled",
-      "operator.prometheus.serviceMonitor.enabled",
-      "hubble.metrics.serviceMonitor.enabled",
+      #"prometheus.enabled",
+      #"prometheus.serviceMonitor.enabled",
+      #"operator.prometheus.enabled",
+      #"operator.prometheus.serviceMonitor.enabled",
+      #"hubble.metrics.serviceMonitor.enabled",
       "hubble.relay.enabled",
-      "hubble.relay.prometheus.enabled",
-      "hubble.relay.prometheus.serviceMonitor.enabled",
+      #"hubble.relay.prometheus.enabled",
+      #"hubble.relay.prometheus.serviceMonitor.enabled",
       "hubble.ui.enabled",
     ]
     content {
@@ -61,5 +61,5 @@ resource "helm_release" "cilium" {
     }
   }
 
-  depends_on = [helm_release.kube_prometheus]
+  #depends_on = [helm_release.kube_prometheus]
 }
