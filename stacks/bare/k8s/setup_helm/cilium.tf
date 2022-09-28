@@ -9,63 +9,48 @@ resource "helm_release" "cilium" {
   wait_for_jobs = true
   timeout       = 600
 
-  set {
-    name  = "kubeProxyReplacement"
-    value = "strict"
-  }
+  values = [
+    yamlencode({
+      kubeProxyReplacement = "strict"
 
-  set {
-    name  = "operator.replicas"
-    value = 1
-  }
+      operator = {
+        replicas = 1
+      }
 
-  set {
-    name  = "hubble.ui.replicas"
-    value = 1
-  }
+      hubble = {
+        ui = {
+          enabled  = true
+          replicas = 1
+          ingress = {
+            enabled = true
+            hosts   = ["hubble.network.k8s.homecluster.local"]
+          }
+        }
+        metrics = {
+          enabled = [
+            "dns:query;ignoreAAAA",
+            "drop",
+            "tcp",
+            "flow",
+            "icmp",
+            "http",
+          ]
+        }
+        relay = {
+          enabled = true
+        }
+      }
 
-  set {
-    name  = "hubble.ui.ingress.hosts[0]"
-    value = "hubble.network.k8s.homecluster.local"
-  }
-
-  set {
-    name  = "ipam.operator.clusterPoolIPv4PodCIDRList[0]"
-    value = data.terraform_remote_state.k8s_init.outputs.network.cidr.cluster
-  }
-
-  set {
-    name  = "ipam.operator.clusterPoolIPv4MaskSize"
-    value = "22"
-  }
-
-  dynamic "set" {
-    for_each = ["dns:query;ignoreAAAA", "drop", "tcp", "flow", "icmp", "http"]
-    content {
-      name  = "hubble.metrics.enabled[${set.key}]"
-      value = set.value
-    }
-  }
-
-  # Habilita serviços
-  dynamic "set" {
-    for_each = [
-      #"prometheus.enabled",
-      #"prometheus.serviceMonitor.enabled",
-      #"operator.prometheus.enabled",
-      #"operator.prometheus.serviceMonitor.enabled",
-      #"hubble.metrics.serviceMonitor.enabled",
-      "hubble.relay.enabled",
-      #"hubble.relay.prometheus.enabled",
-      #"hubble.relay.prometheus.serviceMonitor.enabled",
-      "hubble.ui.enabled",
-      "hubble.ui.ingress.enabled",
-    ]
-    content {
-      name  = set.value
-      value = true
-    }
-  }
+      ipam = {
+        operator = {
+          clusterPoolIPv4PodCIDRList = [
+            data.terraform_remote_state.k8s_init.outputs.network.cidr.cluster,
+          ]
+          clusterPoolIPv4MaskSize = "22"
+        }
+      }
+    })
+  ]
 
   #depends_on = [helm_release.kube_prometheus]
 }
