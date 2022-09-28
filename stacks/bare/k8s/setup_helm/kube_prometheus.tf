@@ -34,6 +34,38 @@ resource "helm_release" "kube_prometheus" {
           }
         }
       }
+
+      prometheusOperator = {
+        resources = {
+          limits = {
+            cpu    = "200m"
+            memory = "200Mi"
+          }
+          requests = {
+            cpu    = "100m"
+            memory = "100Mi"
+          }
+        }
+
+        affinity = {
+          nodeAffinity = {
+            requiredDuringSchedulingIgnoredDuringExecution = {
+              nodeSelectorTerms = [{
+                matchExpressions = [{
+                  key      = "node-role.kubernetes.io/master"
+                  operator = "Exists"
+                }]
+              }]
+            }
+          }
+        }
+
+        tolerations = [{
+          key      = "node-role.kubernetes.io/master"
+          operator = "Exists"
+          effect   = "NoSchedule"
+        }]
+      }
     })
   ]
 
