@@ -20,8 +20,8 @@ resource "ssh_resource" "primary_server_create" {
       "--service-cidr ${var.network.cidr.service}",
       "--cluster-dns ${var.network.dns_ip}",
       "--cluster-domain ${var.network.domain}",
-      "%{for label in local.primary_server.labels~} --node-label ${label} %{endfor~}",
-      "%{for taint in local.primary_server.taints~} --node-taint ${taint} %{endfor~}",
+      "%{for label in local.primary_server.labels~} --node-label \"${label}\" %{endfor~}",
+      "%{for taint in local.primary_server.taints~} --node-taint \"${taint}\" %{endfor~}",
       length(local.disabled_services) > 0 ? "--disable ${local.disabled_services}" : "",
     ]))
   ]

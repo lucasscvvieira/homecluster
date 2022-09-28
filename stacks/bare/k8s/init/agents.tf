@@ -20,8 +20,8 @@ resource "ssh_resource" "agents_create" {
       "K3S_URL=https://${local.primary_server.host}:6443",
       try("K3S_NODE_NAME=${each.value.name}", ""),
       "sh -s - agent",
-      "%{for label in each.value.labels~} --node-label ${label} %{endfor~}",
-      "%{for taint in each.value.taints~} --node-taint ${taint} %{endfor~}",
+      "%{for label in each.value.labels~} --node-label \"${label}\" %{endfor~}",
+      "%{for taint in each.value.taints~} --node-taint \"${taint}\" %{endfor~}",
     ]))
   ]
 
