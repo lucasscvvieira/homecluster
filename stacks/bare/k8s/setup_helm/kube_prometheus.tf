@@ -9,25 +9,24 @@ resource "helm_release" "kube_prometheus" {
   wait             = true
   wait_for_jobs    = true
 
-  set {
-    name  = "alertmanager.ingress.enabled"
-    value = true
-  }
+  values = [
+    yamlencode({
+      alertmanager = {
+        ingress = {
+          enabled = true
+          hosts   = ["alertmanager.monitoring.k8s.homecluster.local"]
+        }
+      }
 
-  set {
-    name  = "alertmanager.ingress.hosts[0]"
-    value = "alertmanager.monitoring.k8s.homecluster.local"
-  }
+      grafana = {
+        ingress = {
+          enabled = true
+          hosts   = ["grafana.monitoring.k8s.homecluster.local"]
+        }
+      }
 
-  set {
-    name  = "grafana.ingress.enabled"
-    value = true
-  }
-
-  set {
-    name  = "grafana.ingress.hosts[0]"
-    value = "grafana.monitoring.k8s.homecluster.local"
-  }
+    })
+  ]
 
   depends_on = [helm_release.cilium]
 }
