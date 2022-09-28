@@ -4,7 +4,7 @@ resource "helm_release" "traefik" {
   chart      = "traefik"
   version    = "10.24.3"
 
-  namespace        = "traefik"
+  namespace        = "traefik-system"
   create_namespace = true
 
   # Não pode esperar porque as configurações do load-balance acontecem

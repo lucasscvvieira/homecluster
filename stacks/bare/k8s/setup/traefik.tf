@@ -4,12 +4,12 @@ resource "kubernetes_manifest" "traefik_dashboard_ingress" {
     kind       = "IngressRoute"
     metadata = {
       name      = "dashboard"
-      namespace = "traefik"
+      namespace = "traefik-system"
     }
     spec = {
       entryPoints = ["web"]
       routes = [{
-        match = "Host(`traefik.homecluster`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+        match = "Host(`traefik.network.k8s.homecluster.local`)"
         kind  = "Rule"
         services = [{
           name = "api@internal"
