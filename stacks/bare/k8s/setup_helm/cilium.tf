@@ -25,6 +25,11 @@ resource "helm_release" "cilium" {
   }
 
   set {
+    name  = "hubble.ui.ingress.hosts[0]"
+    value = "hubble.network.k8s.homecluster.local"
+  }
+
+  set {
     name  = "ipam.operator.clusterPoolIPv4PodCIDRList[0]"
     value = data.terraform_remote_state.k8s_init.outputs.network.cidr.cluster
   }
@@ -54,6 +59,7 @@ resource "helm_release" "cilium" {
       #"hubble.relay.prometheus.enabled",
       #"hubble.relay.prometheus.serviceMonitor.enabled",
       "hubble.ui.enabled",
+      "hubble.ui.ingress.enabled",
     ]
     content {
       name  = set.value
