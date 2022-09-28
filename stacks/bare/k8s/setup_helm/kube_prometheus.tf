@@ -25,6 +25,15 @@ resource "helm_release" "kube_prometheus" {
         }
       }
 
+      coreDns = {
+        service = {
+          selector = {
+            "app.kubernetes.io/instance" = "coredns"
+            "app.kubernetes.io/name"     = "coredns"
+            "k8s-app"                    = "coredns"
+          }
+        }
+      }
     })
   ]
 
