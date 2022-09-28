@@ -30,5 +30,13 @@ agent_nodes = [
   {
     host = "192.168.0.102"
     user = "k3s"
+    labels = [
+      # não é possível atribuir uma role como label no startup do agent
+      # "node-role.kubernetes.io/storage=true"
+    ]
+  },
+  {
+    host = "192.168.0.103"
+    user = "k3s"
   },
 ]
