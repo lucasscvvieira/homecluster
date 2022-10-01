@@ -1,1 +1,4 @@
 **/.terraform/
+
+# Remove todos os arquivos gerados pelo terramate
+**/tmgen_*.tf
