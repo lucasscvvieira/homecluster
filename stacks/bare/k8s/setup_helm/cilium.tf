@@ -13,8 +13,49 @@ resource "helm_release" "cilium" {
     yamlencode({
       kubeProxyReplacement = "strict"
 
+      resources = {
+        limits = {
+          cpu    = "500m"
+          memory = "1Gi"
+        }
+        requests = {
+          cpu    = "100m"
+          memory = "256Mi"
+        }
+      }
+
       operator = {
-        replicas = 1
+        # replicas = 1
+        affinity = {
+          podAntiAffinity = {}
+          nodeAffinity = {
+            requiredDuringSchedulingIgnoredDuringExecution = {
+              nodeSelectorTerms = [{
+                matchExpressions = [{
+                  key      = "node-role.kubernetes.io/master"
+                  operator = "Exists"
+                }]
+              }]
+            }
+          }
+        }
+
+        tolerations = [{
+          key      = "node-role.kubernetes.io/master"
+          operator = "Exists"
+          effect   = "NoSchedule"
+        }]
+
+        resources = {
+          limits = {
+            cpu    = "250m"
+            memory = "256Mi"
+          }
+          requests = {
+            cpu    = "100m"
+            memory = "64Mi"
+          }
+        }
       }
 
       hubble = {
@@ -24,6 +65,30 @@ resource "helm_release" "cilium" {
           ingress = {
             enabled = true
             hosts   = ["hubble.network.k8s.homecluster.local"]
+          }
+          backend = {
+            resources = {
+              limits = {
+                cpu    = "150m"
+                memory = "128Mi"
+              }
+              requests = {
+                cpu    = "50m"
+                memory = "64Mi"
+              }
+            }
+          }
+          frontend = {
+            resources = {
+              limits = {
+                cpu    = "10m"
+                memory = "32Mi"
+              }
+              requests = {
+                cpu    = "1m"
+                memory = "16Mi"
+              }
+            }
           }
         }
         metrics = {
