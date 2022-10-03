@@ -66,8 +66,26 @@ resource "helm_release" "kube_prometheus" {
           effect   = "NoSchedule"
         }]
       }
+
+      prometheus = {
+        prometheusSpec = {
+          storageSpec = {
+            volumeClaimTemplate = {
+              spec = {
+                storageClassName = "longhorn"
+                accessModes      = ["ReadWriteOnce"]
+                resources = {
+                  requests = {
+                    storage = "50Gi"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     })
   ]
 
-  depends_on = [helm_release.cilium]
+  depends_on = [helm_release.longhorn]
 }
