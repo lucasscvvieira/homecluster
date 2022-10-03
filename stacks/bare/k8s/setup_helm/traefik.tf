@@ -16,5 +16,44 @@ resource "helm_release" "traefik" {
   #   value = "--log.level=DEBUG"
   # }
 
+  values = [
+    yamlencode({
+      deployment = {
+        # Roda um ingress em cada nó master
+        kind = "DaemonSet"
+      }
+
+      ingressClass = {
+        enabled        = true
+        isDefaultClass = true
+      }
+
+      ingressRoute = {
+        dashboard = {
+          enabled = false
+        }
+      }
+
+      affinity = {
+        nodeAffinity = {
+          requiredDuringSchedulingIgnoredDuringExecution = {
+            nodeSelectorTerms = [{
+              matchExpressions = [{
+                key      = "node-role.kubernetes.io/master"
+                operator = "Exists"
+              }]
+            }]
+          }
+        }
+      }
+
+      tolerations = [{
+        key      = "node-role.kubernetes.io/master"
+        operator = "Exists"
+        effect   = "NoSchedule"
+      }]
+    })
+  ]
+
   depends_on = [helm_release.cilium]
 }
