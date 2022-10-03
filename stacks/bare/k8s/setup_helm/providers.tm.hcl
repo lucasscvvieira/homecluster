@@ -10,6 +10,10 @@ generate_hcl "tmgen_provider.tf" {
           source  = "hashicorp/helm"
           version = ">= 2.6.0, < 3.0.0"
         }
+        kubernetes = {
+          source  = "hashicorp/kubernetes"
+          version = ">= 2.13.1, < 3.0.0"
+        }
       }
     }
 
@@ -21,6 +25,14 @@ generate_hcl "tmgen_provider.tf" {
         client_certificate     = data.terraform_remote_state.k8s_init.outputs.kube_conf.client.certificate
         client_key             = data.terraform_remote_state.k8s_init.outputs.kube_conf.client.key
       }
+    }
+
+    provider "kubernetes" {
+      host = data.terraform_remote_state.k8s_init.outputs.kube_conf.cluster.host
+
+      cluster_ca_certificate = data.terraform_remote_state.k8s_init.outputs.kube_conf.cluster.ca_certificate
+      client_certificate     = data.terraform_remote_state.k8s_init.outputs.kube_conf.client.certificate
+      client_key             = data.terraform_remote_state.k8s_init.outputs.kube_conf.client.key
     }
   }
 }
