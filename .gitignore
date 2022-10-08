@@ -2,3 +2,5 @@
 
 # Remove todos os arquivos gerados pelo terramate
 **/tmgen_*.tf
+
+stacks/bare/k8s/smb-in-k8s/*.tfvars

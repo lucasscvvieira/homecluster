@@ -34,6 +34,11 @@ resource "helm_release" "traefik" {
         }
       }
 
+      ports = {
+        samba = {
+          port     = 445
+          expose   = true
+          protocol = "TCP"
         }
       }
 
