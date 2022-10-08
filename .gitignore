@@ -4,3 +4,4 @@
 **/tmgen_*.tf
 
 stacks/bare/k8s/smb-in-k8s/*.tfvars
+stacks/bare/k8s/nfs-server/*.tfvars
