@@ -26,25 +26,8 @@ resource "helm_release" "cilium" {
 
       operator = {
         # replicas = 1
-        affinity = {
-          podAntiAffinity = {}
-          nodeAffinity = {
-            requiredDuringSchedulingIgnoredDuringExecution = {
-              nodeSelectorTerms = [{
-                matchExpressions = [{
-                  key      = "node-role.kubernetes.io/master"
-                  operator = "Exists"
-                }]
-              }]
-            }
-          }
-        }
-
-        tolerations = [{
-          key      = "node-role.kubernetes.io/master"
-          operator = "Exists"
-          effect   = "NoSchedule"
-        }]
+        affinity    = local.master_affinity
+        tolerations = local.master_tolerations
 
         resources = {
           limits = {

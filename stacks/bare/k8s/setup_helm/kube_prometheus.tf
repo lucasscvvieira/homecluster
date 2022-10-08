@@ -47,24 +47,8 @@ resource "helm_release" "kube_prometheus" {
           }
         }
 
-        affinity = {
-          nodeAffinity = {
-            requiredDuringSchedulingIgnoredDuringExecution = {
-              nodeSelectorTerms = [{
-                matchExpressions = [{
-                  key      = "node-role.kubernetes.io/master"
-                  operator = "Exists"
-                }]
-              }]
-            }
-          }
-        }
-
-        tolerations = [{
-          key      = "node-role.kubernetes.io/master"
-          operator = "Exists"
-          effect   = "NoSchedule"
-        }]
+        affinity    = local.master_affinity
+        tolerations = local.master_tolerations
       }
 
       prometheus = {
