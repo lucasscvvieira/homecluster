@@ -19,4 +19,18 @@ resource "helm_release" "metallb" {
   # }
 
   depends_on = [helm_release.cilium]
+  values = [
+    yamlencode({
+      controller = {
+        affinity    = local.master_affinity
+        tolerations = local.master_tolerations
+      }
+
+      speaker = {
+        affinity    = local.master_affinity
+        tolerations = local.master_tolerations
+      }
+    })
+  ]
+
 }
