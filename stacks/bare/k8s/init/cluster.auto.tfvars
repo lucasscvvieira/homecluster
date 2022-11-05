@@ -14,7 +14,7 @@ network = {
 
 server_nodes = [
   {
-    host = "192.168.0.101"
+    host = "10.8.0.50"
     user = "k3s"
     taints = [
       # Faz nó rodar apenas pods críticos
@@ -28,7 +28,7 @@ server_nodes = [
 
 agent_nodes = [
   {
-    host = "192.168.0.102"
+    host = "10.8.0.51"
     user = "k3s"
     labels = [
       # não é possível atribuir uma role como label no startup do agent
@@ -36,7 +36,7 @@ agent_nodes = [
     ]
   },
   {
-    host = "192.168.0.103"
+    host = "10.8.0.150"
     user = "k3s"
   },
 ]
