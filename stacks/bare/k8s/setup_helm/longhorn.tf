@@ -29,9 +29,9 @@ resource "helm_release" "longhorn" {
 
   depends_on = [
     helm_release.coredns,
-    kubernetes_labels.k3s02,
+    kubernetes_labels.k3s-arm64-02,
     # kubernetes_annotations.k3s02,
-    kubernetes_labels.k3s03,
+    kubernetes_labels.k3s-amd64-01,
     # kubernetes_annotations.k3s03,
   ]
 }

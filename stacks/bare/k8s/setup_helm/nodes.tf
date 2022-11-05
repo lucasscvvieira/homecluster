@@ -1,10 +1,10 @@
-resource "kubernetes_labels" "k3s02" {
+resource "kubernetes_labels" "k3s-arm64-02" {
   api_version = "v1"
   kind        = "Node"
   force       = true
 
   metadata {
-    name = "k3s-02"
+    name = "k3s-arm64-02"
   }
 
   labels = {
@@ -17,12 +17,12 @@ resource "kubernetes_labels" "k3s02" {
   ]
 }
 
-resource "kubernetes_labels" "k3s03" {
+resource "kubernetes_labels" "k3s-amd64-01" {
   api_version = "v1"
   kind        = "Node"
 
   metadata {
-    name = "k3s-03"
+    name = "k3s-amd64-01"
   }
 
   labels = {
