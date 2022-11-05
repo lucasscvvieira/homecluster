@@ -7,7 +7,7 @@ resource "kubernetes_manifest" "metallb_ipaddresspool" {
       namespace = "metallb-system"
     }
     spec = {
-      addresses = ["192.168.0.48/29"]
+      addresses = ["10.8.0.200-10.8.0.249"]
     }
   }
 }
