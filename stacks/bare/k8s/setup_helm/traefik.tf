@@ -40,6 +40,11 @@ resource "helm_release" "traefik" {
           expose   = true
           protocol = "TCP"
         }
+        nfs = {
+          port     = 2049
+          expose   = true
+          protocol = "TCP"
+        }
       }
 
       affinity    = local.master_affinity
