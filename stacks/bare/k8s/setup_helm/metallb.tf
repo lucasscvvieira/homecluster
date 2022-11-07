@@ -18,19 +18,28 @@ resource "helm_release" "metallb" {
   #   value = "monitoring"
   # }
 
-  depends_on = [helm_release.cilium]
   values = [
     yamlencode({
-      controller = {
-        affinity    = local.master_affinity
-        tolerations = local.master_tolerations
-      }
+      # prometheus = {
+      #   serviceMonitor = {
+      #     enabled = true
+      #     prometheusRule = {
+      #       enabled = true
+      #     }
+      #   }
+      # }
 
-      speaker = {
-        affinity    = local.master_affinity
-        tolerations = local.master_tolerations
-      }
+      # controller = {
+      #   affinity    = local.master_affinity
+      #   tolerations = local.master_tolerations
+      # }
+
+      # speaker = {
+      #   affinity    = local.master_affinity
+      #   tolerations = local.master_tolerations
+      # }
     })
   ]
 
+  depends_on = [helm_release.kube_prometheus]
 }
